@@ -1,0 +1,116 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+ 
+public class MainButton2 extends JFrame {
+    private JButton jButton;
+    private JButton jButton2;
+    private JTextField jTextField;
+    private JTextField jTextField2;
+    private Timer timer;
+    private int counter;
+    private int counterMax;
+    private final int MAX_TIME = 200;
+ 
+    public MainButton2() throws HeadlessException {
+        timer = new Timer(20, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                counter++;
+ 
+                jTextField.setText("count:" + counter);
+ 
+                if (counter >= counterMax) {
+                    counter = 0;
+                    timer.stop();
+                    jButton2.doClick();
+                }
+ 
+            }
+        });
+ 
+ 
+        jButton = new JButton("Start Timer");
+        jButton2 = new JButton("Press Me");
+ 
+        jButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+ 
+                timer.start();
+                if (counterMax == 0) {
+                    counterMax = MAX_TIME;
+                }
+                jTextField2.setText("" + counterMax);
+            }
+        });
+ 
+ 
+        jButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(getContentPane(), " Таймер сработал! ");
+            }
+        });
+        jTextField = new JTextField(10);
+        jTextField2 = new JTextField(10);
+ 
+ 
+        jTextField2.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+ 
+            @Override
+            public void focusLost(FocusEvent e) {
+                try {
+                    counterMax = Integer.parseInt(((JTextField) e.getSource()).getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(getContentPane(), " Wrong value, enter time! ");
+                }
+ 
+            }
+        });
+        jTextField2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+ 
+                try {
+                    counterMax = Integer.parseInt(((JTextField) e.getSource()).getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(getContentPane(), " Wrong value, enter time! ");
+                }
+            }
+        });
+ 
+        JPanel jp = new JPanel(new GridLayout(4, 4));
+        jp.add(new JLabel("Enter Time: "));
+        jp.add(jTextField2);
+        jp.add(new JLabel("Status:"));
+        jp.add(jTextField);
+        jp.add(jButton);
+        jp.add(jButton2);
+        add(jp, BorderLayout.NORTH);
+ 
+ 
+    }
+ 
+ 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame jFrame = new MainButton2();
+                jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                jFrame.setSize(400, 200);
+                jFrame.setLocationRelativeTo(null);
+                jFrame.setVisible(true);
+ 
+ 
+            }
+        });
+    }
+}
